@@ -59,4 +59,4 @@ LaunchDarkly documentation:
 
 
 ## Architecture
-![arch.png](https://github.com/dorklyorg/.github/blob/main/profile/arch.png)
+![dorkly.png](dorkly.png)
