@@ -1,22 +1,25 @@
 # Dorkly Feature Flags
 Open Source Feature Flag system.
 Dorkly is a git-based open source feature flag backend for [LaunchDarkly](https://launchdarkly.com/features/feature-flags/)'s open source SDKs.
-The goal is to provide a simple intuitive way to manage feature flags using existing GitHub workflows. If you're feeling fatigue from too many SaaS tools then this might be if interest to you.
+
+
+It strives to be a simple feature flagging system without the cognitive load of yet another tool. If you're feeling fatigue from too many SaaS products then this might be if interest to you.
+Example flags repo: [dorkly-flags-example](https://github.com/dorklyorg/dorkly-flags-example)
 
 ## Status
-This project is in the early stages of development. Your feedback is appreciated. Early adopters, tire-kickers, and contributors are welcome. 
+This project is in the early stages of development. Your feedback is appreciated. Early adopters, tire-kickers, and contributors are welcome. It's not to late to make major changes!
 
 ## Parity with LaunchDarkly
-LaunchDarkly is a powerful feature management system with a lot of features. Dorkly is a subset of that functionality. Here's what is supported (much more to come):
+LaunchDarkly is a powerful system with a lot of features. Dorkly is a subset of that functionality. Here's what is supported so far:
 1. One [project](https://docs.launchdarkly.com/home/getting-started/vocabulary#project) per git repo. If you need more projects create more repos.
 2. Boolean flags: either on or off, or a percent rollout based on user id
-3. Server-side flags and client-side flags (can exclude client-side on a per-flag basis)
-4. Secrets management: SDK keys are stored in AWS Secrets Manager and exported as Terraform outputs.
+3. [Server-side flags and client-side](https://docs.launchdarkly.com/sdk/concepts/client-side-server-side) flags (can exclude client-side on a per-flag basis)
+4. Secrets management: SDK keys are stored in AWS Secrets Manager and exported as Terraform outputs. If an environment is marked as production, the SDK key is not checked in to the GitHub repo.
 
 Components include (all managed by the [dorkly-flags Terraform module](https://registry.terraform.io/modules/dorklyorg/dorkly-flags/aws/latest):
-1. Feature flag definitions stored as yaml files in a GitHub repository
-2. A GitHub Action that reads in human-friendly yaml files, and converts them to an archive format consumed by:
-3. A Docker image that runs a backend service that serves the flags to your application. This backend service is a [very thin wrapper](docker/Dockerfile) around the [ld-relay](https://docs.launchdarkly.com/sdk/relay-proxy) appliance running in [offline mode](https://docs.launchdarkly.com/sdk/relay-proxy/offline)
+1. Feature flag definitions stored as yaml files in a GitHub repository. [Example](https://github.com/dorklyorg/dorkly-flags-example)
+2. A [GitHub Action](https://github.com/dorklyorg/dorkly): Reads in human-friendly yaml files, and converts them to an archive format consumed by:
+3. A [Docker container](https://github.com/dorklyorg/dorkly/blob/main/docker/Dockerfile): Serves the flags to your application. This is a very thin wrapper around the [ld-relay](https://docs.launchdarkly.com/sdk/relay-proxy) appliance running in [offline mode](https://docs.launchdarkly.com/sdk/relay-proxy/offline)
 
 # Getting Started: One time setup
 ## First steps
@@ -24,27 +27,11 @@ Components include (all managed by the [dorkly-flags Terraform module](https://r
 2. Determine your starting [environments](https://docs.launchdarkly.com/home/getting-started/vocabulary#environment). These can be changed later so it's ok to use the defaults.
 3. Provision your infrastructure using the [dorkly-flags Terraform module](https://registry.terraform.io/modules/dorklyorg/dorkly-flags/aws/latest). [Example](https://github.com/dorklyorg/terraform-aws-dorkly-flags/blob/main/examples/main/main.tf)
 
-## Setting up your application with a properly configured LaunchDarkly SDK: Server-side (golang example)
-TODO: terraform: autogenerate example snippets including the sdk key and backend service url instead of this manual process.
-1. Set up your application with the LaunchDarkly SDK. [Helpful doc](https://docs.launchdarkly.com/sdk/server-side)
-2. For a quick example check out the [hello-go example](https://github.com/launchdarkly/hello-go/blob/main/main.go#L35) program.
-3. Grab the sdk key from either AWS secrets manager or if it is a non-production environment, from the GitHub repo. You'll use it in the next step.
-4. Using the hello-go example as a starting point, set the `LAUNCHDARKLY_SDK_KEY` environment variable to the SDK key you used when provisioning the infrastructure.
-5. *Not yet implemented but needed for MVP*: Grab the backend service url from the GitHub repo's readme/other file tbd. You'll use it in the next step.
-6. Instead of initializing a default client, initialize a client with the url of the backend service:
-```golang
-    import (
-"github.com/launchdarkly/go-server-sdk/v7"
-"github.com/launchdarkly/go-server-sdk/v7/ldcomponents"
+## Setting up your application with a properly configured LaunchDarkly SDK
+Instructions and examples are auto-generated for each environment in the GitHub repo. Once your infrastructure is provisioned, you can find the instructions in the `project/environments/<env>/README.md` file.
+You can also look at dev environment in the [example flags repo](https://github.com/dorklyorg/dorkly-flags-example/tree/main/project/environments/dev)
 
-)
-	dorklyConfig := ld.Config{
-		ServiceEndpoints: ldcomponents.RelayProxyEndpoints("<YOUR_DORKLY_URL>"),
-		Events:           ldcomponents.NoEvents(),
-	}
-
-	ldClient, err := ld.MakeCustomClient(dorklySdkKey, dorklyConfig, 5*time.Second)
-```
+Best practices suggest wiring in all properties via terraform (the module outputs the necessary values). However, you can also manually configure the SDK.
 
 # Common Tasks
 ## Adding a feature flag
@@ -64,6 +51,8 @@ In your newly created GitHub repo you'll notice some example yaml files under th
 3. Once your Terraform run has been applied, you can add flag configs for the environment manually, or by copying the contents of an existing environment.
 
 ## Helpful Links
+LaunchDarkly documentation:
 * [Feature Flags](https://launchdarkly.com/features/feature-flags/)
+* [SDK Types](https://docs.launchdarkly.com/sdk/concepts/client-side-server-side)
 * [Relay Proxy Configuration](https://docs.launchdarkly.com/sdk/features/relay-proxy-configuration/proxy-mode)
 * [Relay Proxy SDK config](https://docs.launchdarkly.com/sdk/relay-proxy/sdk-config)
