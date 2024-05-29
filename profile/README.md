@@ -56,3 +56,7 @@ LaunchDarkly documentation:
 * [SDK Types](https://docs.launchdarkly.com/sdk/concepts/client-side-server-side)
 * [Relay Proxy Configuration](https://docs.launchdarkly.com/sdk/features/relay-proxy-configuration/proxy-mode)
 * [Relay Proxy SDK config](https://docs.launchdarkly.com/sdk/relay-proxy/sdk-config)
+
+
+## Architecture
+![architecture.png](architecture.png)
