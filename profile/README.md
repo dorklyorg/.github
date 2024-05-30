@@ -1,25 +1,21 @@
 # Dorkly Feature Flags
-Open Source Feature Flag system.
-Dorkly is a git-based open source feature flag backend for [LaunchDarkly](https://launchdarkly.com/features/feature-flags/)'s open source SDKs.
-
+Free Open Source [Feature Flag](https://martinfowler.com/articles/feature-toggles.html) system.
+Dorkly is a git-based open source feature flag backend for [LaunchDarkly](https://launchdarkly.com/features/feature-flags/)'s open source [SDKs](https://docs.launchdarkly.com/sdk).
 
 It strives to be a simple feature flagging system without the cognitive load of yet another tool. If you're feeling fatigue from too many SaaS products then this might be if interest to you.
+If you're already using Terraform, AWS, and GitHub then this project will slide right into your existing workflow.
+
 Example flags repo: [dorkly-flags-example](https://github.com/dorklyorg/dorkly-flags-example)
 
 ## Status
-This project is in the early stages of development. Your feedback is appreciated. Early adopters, tire-kickers, and contributors are welcome. It's not to late to make major changes!
+This project is in the early stages of development. Feedback is appreciated. Early adopters, tire-kickers, and contributors are welcome. It's not to late to make major changes!
 
-## Parity with LaunchDarkly
+## Supported Features
 LaunchDarkly is a powerful system with a lot of features. Dorkly is a subset of that functionality. Here's what is supported so far:
 1. One [project](https://docs.launchdarkly.com/home/getting-started/vocabulary#project) per git repo. If you need more projects create more repos.
 2. Boolean flags: either on or off, or a percent rollout based on user id
 3. [Server-side flags and client-side](https://docs.launchdarkly.com/sdk/concepts/client-side-server-side) flags (can exclude client-side on a per-flag basis)
 4. Secrets management: SDK keys are stored in AWS Secrets Manager and exported as Terraform outputs. They are also displayed in the generated environment READMEs. [Example](https://github.com/dorklyorg/dorkly-flags-example/tree/main/project/environments/dev)
-
-Components include (all managed by the [dorkly-flags Terraform module](https://registry.terraform.io/modules/dorklyorg/dorkly-flags/aws/latest):
-1. Feature flag definitions stored as yaml files in a GitHub repository. [Example](https://github.com/dorklyorg/dorkly-flags-example)
-2. A [GitHub Action](https://github.com/dorklyorg/dorkly): Reads in human-friendly yaml files, and converts them to an archive format consumed by:
-3. A [Docker container](https://github.com/dorklyorg/dorkly/blob/main/docker/Dockerfile): Serves the flags to your application. This is a very thin wrapper around the [ld-relay](https://docs.launchdarkly.com/sdk/relay-proxy) appliance running in [offline mode](https://docs.launchdarkly.com/sdk/relay-proxy/offline)
 
 # Getting Started: One time setup
 ## First steps
@@ -59,4 +55,9 @@ LaunchDarkly documentation:
 
 
 ## Architecture
+Components include (all managed by the [dorkly-flags Terraform module](https://registry.terraform.io/modules/dorklyorg/dorkly-flags/aws/latest):
+1. Feature flag definitions stored as yaml files in a GitHub repository. [Example](https://github.com/dorklyorg/dorkly-flags-example)
+2. A [GitHub Action](https://github.com/dorklyorg/dorkly): Reads in human-friendly yaml files, and converts them to an archive format consumed by:
+3. A [Docker container](https://github.com/dorklyorg/dorkly/blob/main/docker/Dockerfile): Serves the flags to your application. This is a very thin wrapper around the [ld-relay](https://docs.launchdarkly.com/sdk/relay-proxy) appliance running in [offline mode](https://docs.launchdarkly.com/sdk/relay-proxy/offline)
+
 ![dorkly.png](dorkly.png)
