@@ -34,7 +34,7 @@ Best practices suggest wiring in all properties via terraform (the module output
 In your newly created GitHub repo you'll notice some example yaml files under the `project/` directory. These are intended to be a starting point, so you can create additional yaml files for your own flags.
 1. Create a flag overview file for the project. Each flag's basic properties are defined at the project level. This includes name, description, and the type of flag (boolean, booleanRollout, etc). This file should be created in the `project/flags` directory. The naming convention is `<flagName>.yml`. Check out the example flags as a starting point.
 2. Create environment-specific flag config files. Under each environment directory in `project/environments`, create a file with the same name as the flag file. This file will contain the environment-specific configuration for the flag. The naming convention is `<flagName>.yml`. Check out the example flags as a starting point.
-3. *Not yet implemented but needed for MVP*: Pull Request checks will validate your changes for well-formedness.
+3. Pull Request checks will validate your changes for basic well-formedness.
 4. Commit your changes to the main branch. The GitHub Action will automatically pick up the changes and update the backend service.
 
 ## Changing a feature flag for an environment
