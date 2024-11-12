@@ -1,1 +1,1 @@
-Welcome! Check out the [Wiki](https://github.com/dorklyorg/dorkly/wiki) for more information.
+This project has been renamed from Dorkly to Brightly and has been moved [here](https://github.com/brightlyorg/brightly/wiki)
